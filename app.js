@@ -4,9 +4,10 @@ const app = express();
 require('dotenv').config();
 const DbConnect = require('./DbConnect/dnconnection');
 const Routers = require('./Routes/routes');
-const port = 3000;
 
-app.use(cors()); // ADD THIS
+const port = process.env.PORT || 3000;
+
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -15,5 +16,5 @@ DbConnect();
 app.use("/", Routers);
 
 app.listen(port, () => {
-    console.log(`Server running: http://localhost:${port}`);
+    console.log(`Server running on PORT: ${port}`);
 });
