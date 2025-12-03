@@ -16,5 +16,5 @@ DbConnect();
 app.use("/", Routers);
 
 app.listen(port, () => {
-    console.log(`Server running on PORT: ${port}`);
+    console.log(`https://localhost${port}`);
 });
