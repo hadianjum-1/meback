@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userModel = require('../Models/ship');
+const nodemailer = require("nodemailer");
 
 // Create user
 router.post("/", async (req, res) => {
@@ -11,21 +12,27 @@ router.post("/", async (req, res) => {
     }
 
     try {
+        // Save to MongoDB
         const user = new userModel({
             Name: name,
             Address: address,
             phone: phone
         });
+
         await user.save();
 
-        const nodemailer = require("nodemailer");
-
+        // EMAIL SENDER - FIXED FOR RENDER HOSTING
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // must be false for port 587
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
+            tls: {
+                rejectUnauthorized: false
+            }
         });
 
         const message = {
@@ -48,7 +55,7 @@ router.post("/", async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        console.log("EMAIL ERROR:", error);
         res.status(500).json({ error: error.message });
     }
 });
